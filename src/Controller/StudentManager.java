@@ -191,7 +191,7 @@ public class StudentManager extends Menu<String> {
         }
         return false;
     }
-    
+
     public void report() {
         if (studentsList == null) {
             System.err.println("The list is empty!!!");
@@ -199,20 +199,22 @@ public class StudentManager extends Menu<String> {
         }
         ArrayList<Report> reportsList = new ArrayList<>();
         for (Course cs : coursesList) {
-            int total = 0;
+            int total = 1;  
             int id = cs.getId();
             String courseName = cs.getCourseName();
-            if (checkReport(reportsList, id, courseName, total)) {
-                reportsList.add(new Report(id, courseName, total + 1));
-            } else {
-                for (Report r : reportsList) {
-                    if (cs.getId() == r.getId() && r.getCourseName().equalsIgnoreCase(courseName)) {
-                        total++;
-                        r.setId(id);
-                        r.setCourseName(courseName);
-                        r.setTotalCourse(total + 1);
-                    }
+            boolean found = false;
+
+            for (Report r : reportsList) {
+                if (r.getId() == id && r.getCourseName().equalsIgnoreCase(courseName)) {
+                    r.setTotalCourse(r.getTotalCourse() + 1);
+                    found = true;
+                    break;
                 }
+            }
+
+            if (!found) {
+
+                reportsList.add(new Report(id, courseName, total));
             }
         }
         for (int i = 0; i < reportsList.size(); i++) {
